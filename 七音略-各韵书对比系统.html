@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>七音略-各韵书系统</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      display: flex;
+      margin: 20px auto;
+      background-color: #fff;
+      padding: 5px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .table-container,
+    .image-container {
+      box-sizing: border-box;
+      overflow: auto;
+    }
+
+    .table-container {
+      flex: 0.6;
+      padding: 10px;
+      border-right: 2px solid #ddd;
+    }
+
+    .image-container {
+      flex: 0.4;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    img {
+      max-width: 100%;
+      max-height: 100%;
+      margin-top: 50px;
+      border: 2px solid #ddd;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 0px;
+      color: #333;
+    }
+
+    th:nth-child(1),
+    td:nth-child(1),
+    th:nth-child(5),
+    td:nth-child(5) {
+      border-left: 2px solid black;
+    }
+
+    th:nth-child(6),
+    td:nth-child(6),
+    th:nth-child(10),
+    td:nth-child(10),
+    th:nth-child(15),
+    td:nth-child(15),
+    th:nth-child(19),
+    td:nth-child(19),
+    th:nth-child(23),
+    td:nth-child(23),
+    th:nth-child(27),
+    td:nth-child(27),
+    th:nth-child(32),
+    td:nth-child(32) {
+      border-right: 2px solid black;
+    }
+
+    th[colspan="2"],
+    [colspan="4"],
+    [colspan="5"] {
+      border: 2px solid black;
+      font-size: 13px;
+      color: #f06b1f;
+      text-align: center;
+    }
+
+    label {
+      font-size: 16px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    select {
+      width: 20%;
+      padding: 10px;
+      margin-bottom: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #333;
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 20px;
+      border: 2px solid #ddd;
+    }
+
+    th,
+    td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      font-size: 13px;
+      text-align: center;
+      cursor: pointer;
+    }
+
+    th {
+      background-color: #f2f2f2;
+    }
+
+    .bold-border {
+      border-bottom: 2px solid black;
+    }
+
+    .grouped-rows {
+      border: 2px solid black;
+      margin-bottom: 20px;
+    }
+
+    .filter-container {
+      display: flex;
+      align-items: center;
+    }
+
+    #searchInput {
+      width: 20%;
+      padding: 10px;
+      margin-left: auto;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+      color: #333;
+      background-color: #fff;
+      box-sizing: border-box;
+    }
+
+    nav {
+      background-color: #fff;
+      padding: 10px 0;
+      text-align: center;
+      border-bottom: 2px solid #ccc;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #333;
+      padding: 10px 20px;
+      margin: 0 5px;
+      border-radius: 30px;
+      transition: all 0.3s ease;
+      background-color: #f8f9fa;
+      border: 2px solid transparent;
+      display: inline-block;
+    }
+
+    nav a:nth-child(1) {
+      background-color: #ffa07a;
+      color: #fff;
+    }
+
+    nav a:nth-child(2) {
+      background-color: #ffc107;
+      color: #fff;
+    }
+
+    nav a:nth-child(3) {
+      background-color: #dda0dd;
+      color: #fff;
+    }
+
+    nav a:nth-child(4) {
+      background-color: #ffb6c1;
+      color: #fff;
+    }
+
+    nav a:nth-child(5) {
+      background-color: #add8e6;
+      color: #fff;
+    }
+
+    nav a:hover {
+      background-color: #dc3545;
+      color: #fff;
+      border-color: #dc3545;
+    }
+
+    #displayText {
+      font-family: 'KaiTi', '楷体', serif;
+      font-size: 22px;
+    }
+
+    #displayText:hover {
+      color: blue;
+    }
+
+    .match {
+      color: green;
+    }
+
+    .mismatch {
+      color: red;
+    }
+
+    .not-found {
+      color: black;
+    }
+
+    .radio-container {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .tooltip {
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      padding: 10px;
+      font-size: 14px;
+      display: none;
+      z-index: 1000;
+    }
+
+    .detail-comparison-container {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .bold-bottom-border {
+      border-bottom: 2px solid black;
+    }
+
+    #statsContainer {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+
+    .color-box {
+      width: 20px;
+      height: 20px;
+      cursor: pointer;
+      border: 1px solid #ccc;
+    }
+
+    .filter-green {
+      background-color: #90EE90;
+    }
+
+    .filter-red {
+      background-color: #FFB6C1;
+    }
+
+    .filter-black {
+      background-color: #D3D3D3;
+    }
+
+    #pieChart {
+      width: 100%;
+      max-width: 300px;
+      height: auto;
+      margin: 0 auto;
+    }
+  </style>
+</head>
+
+<body>
+  <nav>
+    <a href="韵镜-各韵书对比系统.html">韵镜</a>
+    <a href="七音略-各韵书对比系统.html">七音略</a>
+    <a href="四声等子-各韵书对比系统.html">四声等子</a>
+    <a href="切韵指南-各韵书对比系统.html">切韵指南</a>
+    <a href="切韵指掌图-各韵书对比系统.html">切韵指掌图</a>
+  </nav>
+
+  <div class="container">
+    <div class="table-container">
+      <h1>七音略</h1>
+
+      <div class="filter-container">
+        <label for="filterSelect">圖名:</label>
+        <select id="filterSelect">
+          <option value="">All</option>
+        </select>
+        <input type="text" id="searchInput" placeholder="Search...">
+      </div>
+      <div class="text-container">
+        <p id="displayText"></p>
+      </div>
+
+      <div class="radio-container">
+        <label><input type="radio" name="comparison" id="compareNone" checked> 不比较</label>
+        <label><input type="radio" name="comparison" id="compareGuangyun"> 广韵</label>
+        <label><input type="radio" name="comparison" id="compareJiyun"> 集韵</label>
+        <label><input type="radio" name="comparison" id="compareZhongyuan"> 中原音韵</label>
+        <label><input type="radio" name="comparison" id="compareWuyin"> 五音集韵</label>
+      </div>
+
+      <div id="detailComparison" class="detail-comparison-container" style="display: none;">
+        <label><input type="radio" name="detail" value="聲紐" checked> 声</label>
+        <label><input type="radio" name="detail" value="韻目"> 韵</label>
+        <label><input type="radio" name="detail" value="聲調"> 调</label>
+        <label><input type="radio" name="detail" value="等"> 等</label>
+      </div>
+
+      <div id="statsContainer">
+        <div class="color-box filter-green" onclick="highlightColor('green')"></div>
+        <p>绿色字数: <span id="greenCount"></span> (<span id="greenPercentage"></span>%)</p>
+        <div class="color-box filter-red" onclick="highlightColor('red')"></div>
+        <p>红色字数: <span id="redCount"></span> (<span id="redPercentage"></span>%)</p>
+        <div class="color-box filter-black" onclick="highlightColor('black')"></div>
+        <p>黑色字数: <span id="blackCount"></span> (<span id="blackPercentage"></span>%)</p>
+      </div>
+
+      <table id="myTable">
+        <thead>
+          <tr>
+            <th>行號</th>
+            <th>韻目</th>
+            <th>等</th>
+            <th>聲調</th>
+            <th>日</th>
+            <th>來</th>
+            <th>喻</th>
+            <th>匣</th>
+            <th>曉</th>
+            <th>影</th>
+            <th>邪</th>
+            <th>心</th>
+            <th>從</th>
+            <th>清</th>
+            <th>精</th>
+            <th>疑</th>
+            <th>群</th>
+            <th>溪</th>
+            <th>見</th>
+            <th>泥</th>
+            <th>定</th>
+            <th>透</th>
+            <th>端</th>
+            <th>明</th>
+            <th>並</th>
+            <th>滂</th>
+            <th>幫</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="image-container" id="imageContainer">
+      <canvas id="pieChart"></canvas>
+      <img id="imageDisplay" src="" alt="">
+    </div>
+  </div>
+
+  <div class="tooltip" id="tooltip"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    var imagePaths = {
+      '七音略': {
+        '內轉第八': ['../images/七音略-內轉第八.png'],
+        '內轉第二': ['../images/七音略-內轉第二.png'],
+        '內轉第九': ['../images/七音略-內轉第九.png'],
+        '內轉第六': ['../images/七音略-內轉第六.png'],
+        '內轉第七': ['../images/七音略-內轉第七.png'],
+        '內轉第十': ['../images/七音略-內轉第十.png'],
+        '內轉第十二': ['../images/七音略-內轉第十二.png'],
+        '內轉第十三': ['../images/七音略-內轉第十三.png'],
+        '內轉第十一': ['../images/七音略-內轉第十一.png'],
+        '內轉第四': ['../images/七音略-內轉第四.png'],
+        '內轉第五': ['../images/七音略-內轉第五.png'],
+        '內轉第一': ['../images/七音略-內轉第一.png'],
+        '內轉二十八': ['../images/七音略-內轉二十八.png'],
+        '內轉二十七': ['../images/七音略-內轉二十七.png'],
+        '內轉三十七': ['../images/七音略-內轉三十七.png'],
+        '內轉三十四': ['../images/七音略-內轉三十四.png'],
+        '內轉三十五': ['../images/七音略-內轉三十五.png'],
+        '內轉四十': ['../images/七音略-內轉四十.png'],
+        '內轉四十二': ['../images/七音略-內轉四十二.png'],
+        '內轉四十三': ['../images/七音略-內轉四十三.png'],
+        '內轉四十一': ['../images/七音略-內轉四十一.png'],
+        '外轉第二十': ['../images/七音略-外轉第二十.png'],
+        '外轉第三': ['../images/七音略-外轉第三.png'],
+        '外轉第十八': ['../images/七音略-外轉第十八.png'],
+        '外轉第十九': ['../images/七音略-外轉第十九.png'],
+        '外轉第十六': ['../images/七音略-外轉第十六.png'],
+        '外轉第十七': ['../images/七音略-外轉第十七.png'],
+        '外轉第十四': ['../images/七音略-外轉第十四.png'],
+        '外轉第十五': ['../images/七音略-外轉第十五.png'],
+        '外轉二十二': ['../images/七音略-外轉二十二.png'],
+        '外轉二十九': ['../images/七音略-外轉二十九.png'],
+        '外轉二十六': ['../images/七音略-外轉二十六.png'],
+        '外轉二十三': ['../images/七音略-外轉二十三.png'],
+        '外轉二十四': ['../images/七音略-外轉二十四.png'],
+        '外轉二十五': ['../images/七音略-外轉二十五.png'],
+        '外轉二十一': ['../images/七音略-外轉二十一.png'],
+        '外轉三十': ['../images/七音略-外轉三十.png'],
+        '外轉三十八': ['../images/七音略-外轉三十八.png'],
+        '外轉三十二': ['../images/七音略-外轉三十二.png'],
+        '外轉三十九': ['../images/七音略-外轉三十九.png'],
+        '外轉三十六': ['../images/七音略-外轉三十六.png'],
+        '外轉三十三': ['../images/七音略-外轉三十三.png'],
+        '外轉三十一': ['../images/七音略-外轉三十一.png'],
+        '序-1': ['../images/七音略-序-1.png'],
+        '序-2': ['../images/七音略-序-2.png'],
+        '序-3': ['../images/七音略-序-3.png'],
+        '序-4': ['../images/七音略-序-4.png'],
+        '諧聲圖-1': ['../images/七音略-諧聲圖-1.png'],
+        '諧聲圖-2': ['../images/七音略-諧聲圖-2.png'],
+      },
+    };
+
+    const searchInput = document.getElementById('searchInput');
+    const filterSelect = document.getElementById('filterSelect');
+    const table = document.getElementById('myTable');
+    const imageDisplay = document.getElementById('imageDisplay');
+    const displayText = document.getElementById('displayText');
+    const tooltip = document.getElementById('tooltip');
+    const pieChartCanvas = document.getElementById('pieChart').getContext('2d');
+
+    let comparisonKey = '聲紐';
+    let comparisonData = [];
+    let pieChart;
+
+    function convertTextToHtml(text) {
+      return text.split('\n').map(paragraph => `<p>${paragraph}</p>`).join('');
+    }
+
+    filterSelect.addEventListener('change', function () {
+      const selectedValue = this.value;
+      if (selectedValue) {
+        const textData = {
+          "序-1": "通志卷三十六·宋右廸功郎鄭樵漁仲撰\n\n七音略第一\n七音序\n\n天地之大，其用在坎離。人之為靈，其用在耳目。人與禽獸，視聽一也。聖人制律，所以導耳之聰，制字所以擴目之明，耳目根于心，聰明發於外，上智下愚，自此分矣。雖曰皇頡制字，伶倫制律，歴代相承，未聞其書。漢人課籕隸，始為字書，以通文字之學。江左競風騷，始為韻書，以通聲音之學。然漢儒識文字而不識子母，則失制字之旨。江左之儒，識四聲而不識七音，則失立韻之源。獨體為文，合體為字。漢儒知以説文解字，而不知文有子母。生字為母，從母為子。子母不分，所以失制字之旨。四聲為經，七音為緯。江左之儒，知縱有平、上，去入為四聲，而不知衡有宮，商、角、徵、羽、半徵、半商為七音，縱成經，衡成緯，經緯不交，所以失立韻之源。七音之韻，起自西域，流入諸夏，梵僧欲以其教傳之天下，故為此書，雖重百譯之遠，一字不通之處，而音義可傳，華僧從而定之，以三十六為之母，重輕清濁，不失其倫，天地萬物之音，備於此矣，雖鶴唳",
+          "序-2": "風聲，雞鳴狗吠，雷霆驚天，蚊䖟過耳，皆可譯也。況於人言乎？所以日月照處，甘傳梵書者，為有七音之圖，以通百譯之義也。今宣尼之書，自中國而東則朝鮮，西則涼夏，南則交址，北則朔易，皆吾故封也。故封之外，其書不通，何瞿曇之書能入諸夏，而宣尼之書不能至跋提河，聲音之道有障閡耳，此後學之罪也。舟車可通，則文義可及，今舟車所通，而文義所不及者何哉？臣今取七音編而為志，庶使學者盡傳其學，然後能周宣、宣尼之書以及人面之域，所謂用夏變夷，當自此始。臣謹按開皇二年，詔求知音之士參定音樂，時有柱國沛公鄭譯獨得其義，而為議曰：考尋樂府，鍾石律呂，皆有宮、商、角、徵、羽、變宮、變徵之名，七聲之內，三聲乖應，每加詢訪，終莫能通。先是周武帝之時，有龜茲人曰蘓祗婆從突厥皇后入國，善胡琵琶，聽其所奏，一均之中，間有七聲，問之，則曰父在西域，號為知音，世相傳習，調有七種，以其七調校之七聲，㝠若合符。一曰娑陁力，華言平聲，即宮聲也。二曰雞識，華言長聲，即南呂聲也。三曰沙識，華言質直聲，即角聲也。四曰沙侯加濫，華言應聲",
+          "序-3": "即變徵聲也。五曰沙臘，華言應和聲，即徵聲也。六曰般贍，華言五聲即羽聲也。七曰俟利箑，華言斛牛聲即變宮也，譯因習而彈之，始得七聲之正。然其就此七調，又有五旦之名，旦作七調，以華譯之，旦即均也。譯遂因琵琶更立七均，合成十二應十二律，律有七音，音立一調，故成七調十二律，合八十四調，旋轉相交，盡皆和合。仍以其聲考校太樂鍾律，乖戾不可勝數，譯為是著書二十餘篇，太子洗馬蘇䕫駁之，以五音所從來久矣，不言有變宮變徵，七調之作，實所未聞。譯又引古，以為㨿，周有七音之律，漢有七始之志，時何妥以舊學牛弘，以巨儒不能精通，同加沮抑，遂使隋人之耳，不聞七調之音。臣又按唐楊收與安涗論琴，五弦之外複益二弦，因言七聲之義，西京諸儒惑圜鍾函鍾之説，故其郊廟樂惟用黃鍾一均。章帝時，太常丞鮑業始旋十二宮。夫旋宮以七聲為均，均言韻也。古無韻字，猶言一韻聲也。宮、商、角、徵、羽為五聲，加少宮、少徵為七聲，始得相旋為宮之意。琴者，樂之宗也。韻者聲之本也，皆主於七名之曰韻者，蓋取均聲也。臣初得七音韻鑒，一唱而三歎，胡僧有",
+          "序-4": "此妙義，而儒者未之聞。及乎研究制字，考證諧聲，然後知皇頡、史籕之書已具七音之作，先儒不得其傳耳。今作諧聲圖，所以明古人制字通七音之妙。又述內外轉圖，所以明胡僧立韻得經緯之全。釋氏以叅禪為大悟，通音為小悟，雖七音一呼而聚四聲，不召自來，此其麤淺者耳。至於紐躡杳㝠，盤旋廓非，心樂洞融，天籟通乎造化者，不能造其閫字。書主於母，必母權子而行，然後能別形中之聲韻。書主於子，必子權母而行，然後能別聲中之形。所以臣更作字書，以母為主，亦更作韻書，以子為主。今茲內外轉圖，用以別音聲，而非所以主子母也。\n諧聲制字六圖。\n諧聲者，六書之一書也。凡諧聲之道，有同聲者，則取同聲而諧，無同聲者則取協聲而諧，無協聲者則取正音而諧，無正音者則取旁音而諧。所謂聲者，四聲也，音者，七音也。制字之本，或取聲以成字，或取音以成字，不可備舉。今取其要，以證所諧。茲所不載，觸類而長。",
+          "諧聲圖-1": "",
+          "諧聲圖-2": "",
+        };
+        displayText.innerHTML = convertTextToHtml(textData[selectedValue] || '');
+      }
+      updateImage(selectedValue);
+      loadData(selectedValue);
+      const hideTableValues = ["序-1", "序-2", "序-3", "序-4", "諧聲圖-1", "諧聲圖-2"];
+      if (hideTableValues.includes(selectedValue)) {
+        table.style.display = 'none';
+      } else {
+        table.style.display = 'table';
+      }
+      updateStats();
+    });
+
+    function updateImage(selectedValue) {
+      if (selectedValue && imagePaths.hasOwnProperty('七音略') && imagePaths['七音略'].hasOwnProperty(selectedValue)) {
+        const paths = imagePaths['七音略'][selectedValue];
+        imageDisplay.src = paths[0]; // Assuming one image per selection for simplicity
+      } else {
+        imageDisplay.src = '';
+      }
+    }
+
+    function filterBySearch(searchTerm) {
+      const tableBody = document.querySelector('#myTable tbody');
+      const rows = tableBody.getElementsByTagName('tr');
+      for (let i = 0; i < rows.length; i++) {
+        const cells = rows[i].getElementsByTagName('td');
+        let found = false;
+        for (let j = 4; j < cells.length; j++) {
+          const cell = cells[j];
+          if (cell.textContent.toLowerCase().includes(searchTerm.toLowerCase())) {
+            found = true;
+            break;
+          }
+        }
+        if (found) {
+          rows[i].style.display = '';
+        } else {
+          rows[i].style.display = 'none';
+        }
+      }
+      updateStats();
+    }
+
+    async function fetchJson(url) {
+      const response = await fetch(url);
+      return response.json();
+    }
+
+    function findComparisonData(character, comparisonData) {
+      return comparisonData.filter(entry => entry.字 === character);
+    }
+
+    function createTableRow(rowData, comparisonData, rowIndex) {
+      const row = document.createElement('tr');
+      Object.entries(rowData).slice(1).forEach(([key, value], index) => {
+        const cell = document.createElement('td');
+        if (value) {
+          const comparisonEntries = findComparisonData(value, comparisonData);
+          let isMatch = false;
+          let tooltipContent = '';
+          for (const comparisonEntry of comparisonEntries) {
+            if (comparisonKey === '聲紐') {
+              if (comparisonEntry.聲紐 === key) {
+                isMatch = true;
+              }
+            } else if (comparisonKey === '韻目') {
+              if (comparisonEntry.韻目 === rowData.韻目) {
+                isMatch = true;
+              }
+            } else {
+              if (comparisonEntry[comparisonKey] === rowData[comparisonKey]) {
+                isMatch = true;
+              }
+            }
+            tooltipContent += `<p>${JSON.stringify(comparisonEntry)}</p>`;
+          }
+          cell.textContent = value;
+          if (index < 4) {
+            cell.className = '';
+          } else if (comparisonEntries.length > 0) {
+            cell.className = isMatch ? 'match' : 'mismatch';
+          } else {
+            cell.className = 'not-found';
+          }
+          cell.setAttribute('data-tooltip', tooltipContent);
+        } else {
+          cell.textContent = '';
+          cell.className = '';
+        }
+        row.appendChild(cell);
+      });
+      if ((rowIndex + 1) % 4 === 0) {
+        row.classList.add('bold-bottom-border');
+      }
+      return row;
+    }
+
+    async function loadData(filterValue) {
+      const compareNone = document.getElementById('compareNone').checked;
+      const compareGuangyun = document.getElementById('compareGuangyun').checked;
+      const compareJiyun = document.getElementById('compareJiyun').checked;
+      const compareZhongyuan = document.getElementById('compareZhongyuan').checked;
+      const compareWuyin = document.getElementById('compareWuyin').checked;
+
+      const table1Data = await fetchJson('table-2-2.json');
+
+      if (compareGuangyun) {
+        comparisonData = await fetchJson('guangyun.json');
+      } else if (compareJiyun) {
+        comparisonData = await fetchJson('jiyun.json');
+      } else if (compareZhongyuan) {
+        comparisonData = await fetchJson('zhongyuanyinyun.json');
+      } else if (compareWuyin) {
+        comparisonData = await fetchJson('wuyinjiyun.json');
+      } else {
+        comparisonData = [];
+      }
+
+      const resultsBody = document.querySelector('#myTable tbody');
+      resultsBody.innerHTML = '';
+
+      table1Data
+        .filter(rowData => !filterValue || rowData['圖名'] === filterValue)
+        .forEach((rowData, index) => {
+          const row = createTableRow(rowData, comparisonData, index);
+          resultsBody.appendChild(row);
+        });
+
+      const uniqueValues = new Set(table1Data.map(row => row['圖名']));
+      filterSelect.innerHTML = '<option value="">All</option>';
+      uniqueValues.forEach(value => {
+        const option = document.createElement('option');
+        option.textContent = value;
+        option.value = value;
+        filterSelect.appendChild(option);
+      });
+
+      if (filterValue) {
+        filterSelect.value = filterValue;
+      }
+
+      addTooltipEvents();
+      updateStats();
+      updatePieChart();
+    }
+
+    function addTooltipEvents() {
+      const cells = document.querySelectorAll('#myTable td');
+      cells.forEach(cell => {
+        cell.addEventListener('mouseenter', function (event) {
+          const tooltipContent = this.getAttribute('data-tooltip');
+          if (tooltipContent) {
+            tooltip.innerHTML = tooltipContent;
+            tooltip.style.left = `${event.pageX + 10}px`;
+            tooltip.style.top = `${event.pageY + 10}px`;
+            tooltip.style.display = 'block';
+          }
+        });
+
+        cell.addEventListener('mouseleave', function () {
+          tooltip.style.display = 'none';
+        });
+      });
+    }
+
+    document.getElementById('compareNone').addEventListener('change', () => {
+      document.getElementById('detailComparison').style.display = 'none';
+      loadData(filterSelect.value);
+    });
+
+    document.getElementById('compareGuangyun').addEventListener('change', () => {
+      document.getElementById('detailComparison').style.display = 'flex';
+      loadData(filterSelect.value);
+    });
+
+    document.getElementById('compareJiyun').addEventListener('change', () => {
+      document.getElementById('detailComparison').style.display = 'flex';
+      loadData(filterSelect.value);
+    });
+
+    document.getElementById('compareZhongyuan').addEventListener('change', () => {
+      document.getElementById('detailComparison').style.display = 'flex';
+      loadData(filterSelect.value);
+    });
+
+    document.getElementById('compareWuyin').addEventListener('change', () => {
+      document.getElementById('detailComparison').style.display = 'flex';
+      loadData(filterSelect.value);
+    });
+
+    document.getElementsByName('detail').forEach(radio => {
+      radio.addEventListener('change', () => {
+        comparisonKey = radio.value;
+        loadData(filterSelect.value);
+      });
+    });
+
+    searchInput.addEventListener('input', function () {
+      const searchTerm = this.value.trim();
+      filterBySearch(searchTerm);
+    });
+
+    // Function to count and display the number of colored texts
+    function updateStats() {
+      const greenCount = Array.from(document.querySelectorAll('#myTable td.match')).filter(cell => cell.textContent.trim() !== '').length;
+      const redCount = Array.from(document.querySelectorAll('#myTable td.mismatch')).filter(cell => cell.textContent.trim() !== '').length;
+      const blackCount = Array.from(document.querySelectorAll('#myTable td.not-found')).filter(cell => cell.textContent.trim() !== '').length;
+      const totalCount = greenCount + redCount + blackCount;
+
+      document.getElementById('greenCount').innerText = greenCount;
+      document.getElementById('redCount').innerText = redCount;
+      document.getElementById('blackCount').innerText = blackCount;
+
+      document.getElementById('greenPercentage').innerText = ((greenCount / totalCount) * 100).toFixed(2);
+      document.getElementById('redPercentage').innerText = ((redCount / totalCount) * 100).toFixed(2);
+      document.getElementById('blackPercentage').innerText = ((blackCount / totalCount) * 100).toFixed(2);
+
+      updatePieChart();
+    }
+
+    // Function to highlight specific color cells
+    function highlightColor(color) {
+      const cells = document.querySelectorAll('#myTable td');
+      cells.forEach(cell => {
+        cell.style.backgroundColor = '';
+      });
+      if (color === 'green') {
+        document.querySelectorAll('#myTable td.match').forEach(cell => {
+          cell.style.backgroundColor = '#90EE90';
+        });
+      } else if (color === 'red') {
+        document.querySelectorAll('#myTable td.mismatch').forEach(cell => {
+          cell.style.backgroundColor = '#FFB6C1';
+        });
+      } else if (color === 'black') {
+        document.querySelectorAll('#myTable td.not-found').forEach(cell => {
+          cell.style.backgroundColor = '#D3D3D3';
+        });
+      }
+    }
+
+    // Function to update pie chart
+    function updatePieChart() {
+      const greenCount = parseInt(document.getElementById('greenCount').innerText);
+      const redCount = parseInt(document.getElementById('redCount').innerText);
+      const blackCount = parseInt(document.getElementById('blackCount').innerText);
+
+      const data = {
+        labels: ['绿色字数', '红色字数', '黑色字数'],
+        datasets: [{
+          data: [greenCount, redCount, blackCount],
+          backgroundColor: ['#90EE90', '#FFB6C1', '#D3D3D3'],
+        }],
+      };
+
+      if (pieChart) {
+        pieChart.destroy();
+      }
+
+      pieChart = new Chart(pieChartCanvas, {
+        type: 'pie',
+        data: data,
+        options: {
+          responsive: true,
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+            },
+            tooltip: {
+              callbacks: {
+                label: function (tooltipItem) {
+                  const value = tooltipItem.raw;
+                  const total = data.datasets[0].data.reduce((acc, val) => acc + val, 0);
+                  const percentage = ((value / total) * 100).toFixed(2);
+                  return `${value} (${percentage}%)`;
+                },
+              },
+            },
+          },
+          onHover: function (event, elements) {
+            if (elements.length > 0) {
+              const index = elements[0].index;
+              const label = data.labels[index];
+              highlightColor(label === '绿色字数' ? 'green' : label === '红色字数' ? 'red' : 'black');
+            } else {
+              highlightColor(null);
+            }
+          },
+        },
+      });
+    }
+
+    fetch('table-2-2.json')
+      .then(response => response.json())
+      .then(data => {
+        const tableBody = document.querySelector('#myTable tbody');
+        const filterSelect = document.getElementById('filterSelect');
+
+        const uniqueValues = new Set(data.map(row => row['圖名']));
+        uniqueValues.forEach(value => {
+          const option = document.createElement('option');
+          option.textContent = value;
+          option.value = value;
+          filterSelect.appendChild(option);
+        });
+
+        const filteredData = data.slice(0);
+        filteredData.forEach(rowData => {
+          const row = document.createElement('tr');
+          Object.entries(rowData).slice(1).forEach(([key, value]) => {
+            const cell = document.createElement('td');
+            cell.textContent = value;
+            row.appendChild(cell);
+          });
+          tableBody.appendChild(row);
+        });
+
+        filterSelect.addEventListener('change', function () {
+          const selectedValue = this.value;
+          loadData(selectedValue);
+        });
+
+        addTooltipEvents();
+        setFiltersFromParams();
+        updateStats();
+      })
+      .catch(error => console.error('Error fetching JSON:', error));
+
+    function getQueryParams() {
+      const params = {};
+      const queryString = window.location.search.substring(1);
+      const queryArray = queryString.split('&');
+      queryArray.forEach(param => {
+        const [key, value] = param.split('=');
+        params[key] = decodeURIComponent(value);
+      });
+      return params;
+    }
+
+    function setFiltersFromParams() {
+      const params = getQueryParams();
+      if (params.comparison) {
+        document.getElementById(params.comparison).checked = true;
+        if (params.comparison !== 'compareNone') {
+          document.getElementById('detailComparison').style.display = 'flex';
+        }
+      }
+      if (params.detail) {
+        document.querySelector(`input[name="detail"][value="${params.detail}"]`).checked = true;
+      }
+      if (params.filterShe) {
+        filterSelect.value = params.filterShe;
+      }
+      loadData(filterSelect.value);
+    }
+  </script>
+</body>
+
+</html>
